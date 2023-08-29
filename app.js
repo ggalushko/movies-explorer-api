@@ -75,7 +75,7 @@ app.use(errorHandler);
 
 const connect = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+    await mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
       useNewUrlParser: true,
     });
     await app.listen(PORT);
