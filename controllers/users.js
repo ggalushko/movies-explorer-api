@@ -84,6 +84,8 @@ const editProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('некорректный запрос');
+      } else if (err.code === 11000) {
+        next(new ConflictError('Такой пользователь уже существует'));
       }
       return next(err);
     })
