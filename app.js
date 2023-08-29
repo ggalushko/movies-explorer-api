@@ -4,14 +4,9 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cors = require('cors');
-const { celebrate, Joi } = require('celebrate');
-const usersRouter = require('./routes/users');
-const NotFoundError = require('./errors/NotFoundError');
-const moviesRouter = require('./routes/movies');
-const { login, createUser } = require('./controllers/users');
+const router = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -47,27 +42,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
-
-app.use(auth);
-
-app.use('/movies', moviesRouter);
-app.use('/users', usersRouter);
-app.use('*', (req, res, next) => {
-  next(new NotFoundError('Ничего не найдено'));
-});
+app.use(router);
 
 app.use(errorLogger);
 app.use(errors());
