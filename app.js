@@ -8,6 +8,7 @@ const router = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const { NODE_ENV, DB_URL } = process.env;
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -50,7 +51,7 @@ app.use(errorHandler);
 
 const connect = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
+    await mongoose.connect(NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
       useNewUrlParser: true,
     });
     await app.listen(PORT);
