@@ -64,7 +64,7 @@ const deleteMovie = (req, res, next) => {
         next(new ForbiddenError('запрещено'));
       }
 
-      Movie.findByIdAndDelete(req.params.movieId).select('-owner')
+      return Movie.findByIdAndDelete(req.params.movieId).select('-owner')
         .then((deleted) => res.status(200).send(deleted));
     })
     .catch(next);
